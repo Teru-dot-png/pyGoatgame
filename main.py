@@ -19,7 +19,7 @@ clock = pygame.time.Clock()
 pygame.mixer.init()
 #*VARIABLES_____________________________________________________
 
-bad_explosion = pygame.mixer.Sound('Sounds\Bad explosion.mp3')
+bad_explosion = pygame.mixer.Sound('Sounds/Bad_explosion.mp3')
 bad_explosion.set_volume(0.1)
 
 sound_played1 = False
@@ -32,7 +32,9 @@ P1 = {
     'x': 133,
     'y': 270,
     'speed': 5,
-    'image': pygame.image.load('characters/Amie.png'),
+    'image': pygame.image.load('characters/amisita.png'),
+    'image2': pygame.image.load('characters/amisitalewd.png'),
+    'alt': False,
     'last_direction': 'right',
     'directions': {
         'up': pygame.K_w,
@@ -48,7 +50,9 @@ P2 = {
     'x': 600,
     'y': 270,
     'speed': 5,
-    'image': pygame.image.load('characters/Felix.png'),
+    'image': pygame.image.load('characters/Felixito.png'),
+    'image2': pygame.image.load('characters/Felixitoblush.png'),
+    'alt': False,
     'last_direction': 'left',
     'directions': {
         'up': pygame.K_UP,
@@ -60,11 +64,12 @@ P2 = {
 }
 
 P3 = {
-    'name': 'Felixito',
+    'name': 'placeholder',
     'x': 400,
     'y': 300,
     'speed': 5,
     'image': pygame.image.load('characters/Felixito.png'),
+    'image2': pygame.image.load('characters/Felixitoblush.png'),
     'last_direction': 'left',
     'directions': {
         'up': pygame.K_i,
@@ -98,18 +103,33 @@ def handle_movement(player, keys):
                 player['x'] += player['speed']
                 if player['last_direction'] != 'right':
                     player['image'] = pygame.transform.flip(player['image'], True, False)
+                    player['image2'] = pygame.transform.flip(player['image2'], True, False)
                     player['last_direction'] = 'right'
             elif direction == 'left':
                 player['x'] -= player['speed']
                 if player['last_direction'] != 'left':
                     player['image'] = pygame.transform.flip(player['image'], True, False)
+                    player['image2'] = pygame.transform.flip(player['image2'], True, False)
                     player['last_direction'] = 'left'
             elif direction == 'up':
                 player['y'] -= player['speed']
             elif direction == 'down':
                 player['y'] += player['speed']
 
+#render handler
+def render_handler():
+    screen.fill((255, 255, 255))
+    if P1['alt']:
+        screen.blit(P1['image2'], (P1['x'], P1['y']))
+    else:
+        screen.blit(P1['image'], (P1['x'], P1['y']))
 
+    if P2['alt']:
+        screen.blit(P2['image2'], (P2['x'], P2['y']))
+    else:
+        screen.blit(P2['image'], (P2['x'], P2['y']))
+    #screen.blit(P3['image'], (P3['x'], P3['y']))   
+    pass
 
 
 
@@ -119,9 +139,9 @@ def handle_movement(player, keys):
 
 #*SETUP_________________________________________________________
 
-pygame.display.set_caption("Prototype")
-#? icon = pygame.image.load("assets/icon.png")
-#? pygame.display.set_icon(icon)
+pygame.display.set_caption("Prototype") #? Set the title of the window
+#? icon = pygame.image.load("assets/icon.png") #? Load the icon
+#? pygame.display.set_icon(icon) #? Set the icon
 
 
 #! _____________________________Main game loop__________________________________
@@ -142,6 +162,14 @@ while running:
                 else:
                     screencount = 0
                     screen = pygame.display.set_mode(original_resolution, pygame.RESIZABLE)
+            elif event.key == pygame.K_SPACE:
+                # toggle bool value alt from P1 between True and False
+                if P1['alt']:
+                    P1['alt'] = False
+                else:
+                    P1['alt'] = True
+
+                
 
         
 
@@ -151,33 +179,46 @@ while running:
 
     handle_movement(P1, keys)
     handle_movement(P2, keys)
-    handle_movement(P3, keys)
+    #handle_movement(P3, keys)
 
-    P1hitbox = pygame.Rect(P1['x'], P1['y'], P1['image'].get_width(), P1['image'].get_height())
-    P2hitbox = pygame.Rect(P2['x'], P2['y'], P2['image'].get_width(), P2['image'].get_height())
-    P3hitbox = pygame.Rect(P3['x'], P3['y'], P3['image'].get_width(), P3['image'].get_height())
     
+        
+
+    P1hitbox = pygame.Rect(P1['x'], P1['y'], P1['image'].get_width() - 50, P1['image'].get_height())
+    P1ALTbox = pygame.Rect(P1['x'], P1['y'], P1['image'].get_width() + 100, P1['image'].get_height() + 31)  
+    P2ALTbox = pygame.Rect(P2['x'], P2['y'], P2['image'].get_width() + 100, P2['image'].get_height() + 31)
+    P2hitbox = pygame.Rect(P2['x'], P2['y'], P2['image'].get_width() - 50, P2['image'].get_height())
+    #P3hitbox = pygame.Rect(P3['x'], P3['y'], P3['image'].get_width(), P3['image'].get_height())
+
+    #if alt is true we make a colision check p1 with p2 alt hitbox
+    if P1['alt']:
+        if P1ALTbox.colliderect(P2ALTbox):
+            print("alt colided with alt")
+            P2['alt'] = True
+    else:
+        P2['alt'] = False
+    
+    # we are gonna see if the circle collides with the hitbox of P2
+    
+
+
     if P1hitbox.colliderect(P2hitbox):
         print("Collision detected!")
     
-    if P3hitbox.colliderect(P1hitbox) and not sound_played1:
-        print("Felixito has murdered P1!")
-        P1['can_move'] = False
-        bad_explosion.play()
-        sound_played1 = True
+    #if P3hitbox.colliderect(P1hitbox) and not sound_played1:
+    #    print("Felixito has murdered P1!")
+    #    P1['can_move'] = False
+    #    bad_explosion.play()
+    #    sound_played1 = True#
 
-    if P3hitbox.colliderect(P2hitbox) and not sound_played2:
-        print("Felixito has murdered P2!")
-        P2['can_move'] = False
-        bad_explosion.play()
-        sound_played2 = True
+    #if P3hitbox.colliderect(P2hitbox) and not sound_played2:
+    #    print("Felixito has murdered P2!")
+    #    P2['can_move'] = False
+    #    bad_explosion.play()
+    #    sound_played2 = True
 
 
-    screen.fill((255, 255, 255))
-
-    screen.blit(P1['image'], (P1['x'], P1['y']))
-    screen.blit(P2['image'], (P2['x'], P2['y']))
-    screen.blit(P3['image'], (P3['x'], P3['y']))
+    render_handler()
 
     # *after* drawing everything, flip the display
     clock.tick(60)
