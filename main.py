@@ -17,10 +17,9 @@ screen = pygame.display.set_mode(original_resolution, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
 pygame.mixer.init()
-#*VARIABLES_____________________________________________________
 
-bad_explosion = pygame.mixer.Sound('Sounds/Bad_explosion.mp3')
-bad_explosion.set_volume(0.1)
+
+#*VARIABLES_____________________________________________________
 
 sound_played1 = False
 sound_played2 = False
