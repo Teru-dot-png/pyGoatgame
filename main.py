@@ -176,7 +176,7 @@ while running:
     #if alt is true we make a colision check p1 with p2 alt hitbox
     if P1['alt']:
         if P1ALTbox.colliderect(P2ALTbox):
-            print("alt colided with alt")
+            print("alt collided with alt")
             P2['alt'] = True
     else:
         P2['alt'] = False
