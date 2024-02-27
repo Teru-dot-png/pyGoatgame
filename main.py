@@ -62,22 +62,7 @@ P2 = {
     'can_move': True
 }
 
-P3 = {
-    'name': 'placeholder',
-    'x': 400,
-    'y': 300,
-    'speed': 5,
-    'image': pygame.image.load('characters/Felixito.png'),
-    'image2': pygame.image.load('characters/Felixitoblush.png'),
-    'last_direction': 'left',
-    'directions': {
-        'up': pygame.K_i,
-        'down': pygame.K_k,
-        'left': pygame.K_j,
-        'right': pygame.K_l,
-    },
-    'can_move': True
-}
+
 
 circleX1, circleY1 = original_resolution[0] / 2, original_resolution[1] / 2
 circleX2, circleY2 = original_resolution[0] / 2, original_resolution[1] / 2
@@ -126,8 +111,7 @@ def render_handler():
     if P2['alt']:
         screen.blit(P2['image2'], (P2['x'], P2['y']))
     else:
-        screen.blit(P2['image'], (P2['x'], P2['y']))
-    #screen.blit(P3['image'], (P3['x'], P3['y']))   
+        screen.blit(P2['image'], (P2['x'], P2['y']))  
     pass
 
 
@@ -178,7 +162,7 @@ while running:
 
     handle_movement(P1, keys)
     handle_movement(P2, keys)
-    #handle_movement(P3, keys)
+    
 
     
         
@@ -187,7 +171,7 @@ while running:
     P1ALTbox = pygame.Rect(P1['x'], P1['y'], P1['image'].get_width() + 100, P1['image'].get_height() + 31)  
     P2ALTbox = pygame.Rect(P2['x'], P2['y'], P2['image'].get_width() + 100, P2['image'].get_height() + 31)
     P2hitbox = pygame.Rect(P2['x'], P2['y'], P2['image'].get_width() - 50, P2['image'].get_height())
-    #P3hitbox = pygame.Rect(P3['x'], P3['y'], P3['image'].get_width(), P3['image'].get_height())
+
 
     #if alt is true we make a colision check p1 with p2 alt hitbox
     if P1['alt']:
@@ -197,24 +181,16 @@ while running:
     else:
         P2['alt'] = False
     
-    # we are gonna see if the circle collides with the hitbox of P2
+
     
 
 
     if P1hitbox.colliderect(P2hitbox):
         print("Collision detected!")
     
-    #if P3hitbox.colliderect(P1hitbox) and not sound_played1:
-    #    print("Felixito has murdered P1!")
-    #    P1['can_move'] = False
-    #    bad_explosion.play()
-    #    sound_played1 = True#
 
-    #if P3hitbox.colliderect(P2hitbox) and not sound_played2:
-    #    print("Felixito has murdered P2!")
-    #    P2['can_move'] = False
-    #    bad_explosion.play()
-    #    sound_played2 = True
+
+
 
 
     render_handler()
